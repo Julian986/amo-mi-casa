@@ -7,6 +7,7 @@ import Footer from "@/components/site/Footer";
 import WhatsAppButton from "@/components/site/WhatsAppButton";
 import CartProvider from "@/components/providers/CartProvider";
 import CartDrawer from "@/components/site/CartDrawer";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -81,6 +82,7 @@ export default function RootLayout({
           <Footer />
           <WhatsAppButton />
           <CartDrawer />
+          <Analytics />
         </CartProvider>
       </body>
     </html>
