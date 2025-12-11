@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { User } from "lucide-react";
 import TopBar from "./TopBar";
@@ -26,7 +26,9 @@ export default function Header() {
               Amo mi casa
             </Link>
             <div className="hidden md:flex w-full max-w-3xl items-center gap-2 justify-self-center">
-              <SearchBar />
+              <Suspense fallback={null}>
+                <SearchBar />
+              </Suspense>
             </div>
             <div className="flex items-center gap-2 justify-self-end">
               <Link

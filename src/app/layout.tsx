@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Suspense } from "react";
 import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
 import WhatsAppButton from "@/components/site/WhatsAppButton";
@@ -57,9 +58,11 @@ export const metadata: Metadata = {
       }
     ],
   },
-  themeColor: "#ffffff",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+};
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -71,7 +74,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
-          <Header />
+          <Suspense fallback={null}>
+            <Header />
+          </Suspense>
           {children}
           <Footer />
           <WhatsAppButton />
