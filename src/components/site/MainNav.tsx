@@ -12,14 +12,15 @@ export const NAV: NavItem[] = [
   {
     label: "Productos",
     children: [
-      { label: "Textiles", href: "/c/textiles" },
-      { label: "Cocina", href: "/c/cocina" },
-      { label: "Baño", href: "/c/bano" },
-      { label: "Decoración", href: "/c/decoracion" },
-      { label: "Esencias y Aromas", href: "/c/esencias" },
-      { label: "Iluminación", href: "/c/iluminacion" },
-      { label: "GIFT CARD", href: "/c/gift-card" },
-      { label: "SALE", href: "/c/sale" },
+      { label: "Manteles antimanchas", href: "/c/manteles" },
+      { label: "Bolsos materos y playeros", href: "/c/bolsos" },
+      { label: "Loncheras para niños", href: "/c/infantil" },
+      { label: "Recipientes organizadores", href: "/c/organizadores" },
+      { label: "Vasos térmicos", href: "/c/vasos-termicos" },
+      { label: "Botellitas plegables", href: "/c/botellitas" },
+      { label: "Termos", href: "/c/termos" },
+      { label: "Pavas eléctricas", href: "/c/pavas-electricas" },
+      { label: "Ofertas", href: "/c/sale" },
     ],
   },
   { label: "Preguntas Frecuentes", href: "/faq" },
@@ -29,7 +30,7 @@ export const NAV: NavItem[] = [
 
 export default function MainNav() {
   return (
-    <nav className="w-full border-b border-stone-200">
+    <nav className="hidden md:block w-full border-b border-stone-200">
       <div className="mx-auto max-w-7xl px-4">
         <ul className="flex h-12 items-center gap-6 text-sm">
           {NAV.map((item) => (

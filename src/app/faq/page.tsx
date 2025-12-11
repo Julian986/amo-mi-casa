@@ -1,3 +1,5 @@
+import ScrollToTop from "@/components/site/ScrollToTop";
+
 export default function FAQPage() {
   const faqs = [
     {
@@ -24,6 +26,7 @@ export default function FAQPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
+      <ScrollToTop />
       <h1 className="text-2xl md:text-3xl font-semibold text-stone-900">Preguntas Frecuentes</h1>
       <div className="mt-6 divide-y divide-stone-200 rounded-lg border border-stone-200 bg-white">
         {faqs.map((item, idx) => (

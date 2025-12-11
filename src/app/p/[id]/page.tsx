@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import BackButton from "@/components/site/BackButton";
 import PaymentMethods from "@/components/site/PaymentMethods";
+import ProductActions from "@/components/site/ProductActions";
+import ScrollToTop from "@/components/site/ScrollToTop";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -30,8 +32,9 @@ export default async function ProductDetail({ params }: PageProps) {
   if (!product) return notFound();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10">
-      <div className="mb-6">
+    <div className="mx-auto max-w-7xl px-4 pt-0 md:pt-0 pb-10">
+      <ScrollToTop />
+      <div className="mt-4 md:mt-6 mb-6">
         <BackButton />
       </div>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -92,12 +95,7 @@ export default async function ProductDetail({ params }: PageProps) {
             </div>
           )}
 
-          <div className="flex gap-3">
-            <Button className="h-11 px-6 cursor-pointer">Agregar al carrito</Button>
-            <Button className="h-11 px-6 cursor-pointer" variant="secondary">
-              Consultar
-            </Button>
-          </div>
+          <ProductActions id={product.id} name={product.name} price={product.price} image={String(product.image)} />
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <PaymentMethods />

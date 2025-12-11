@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
+import { WHATSAPP_PHONE, WHATSAPP_DEFAULT_TEXT } from "@/lib/constants";
 
-const PHONE_WA = "393508505298"; // +39 350 850 5298 sin símbolos ni espacios
-const DEFAULT_TEXT = encodeURIComponent("Hola! Quisiera hacer una consulta 🙂");
+const DEFAULT_TEXT = encodeURIComponent(WHATSAPP_DEFAULT_TEXT || "Hola! Quisiera hacer una consulta");
 
 export default function WhatsAppButton() {
   return (
     <Link
-      href={`https://wa.me/${PHONE_WA}?text=${DEFAULT_TEXT}`}
+      href={`https://wa.me/${WHATSAPP_PHONE}?text=${DEFAULT_TEXT}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"

@@ -1,24 +1,34 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
+import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 
 export default function CartDrawer() {
   const { isOpen, close, items, removeItem, clear, total } = useCart();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    lockScroll();
+    return () => {
+      unlockScroll();
+    };
+  }, [isOpen]);
 
   return (
     <>
       {/* Overlay */}
       <div
         onClick={close}
-        className={`fixed inset-0 z-50 bg-black/40 transition-opacity ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 z-[60] bg-black/40 transition-opacity ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
         aria-hidden="true"
       />
       {/* Panel */}
       <aside
-        className={`fixed right-0 top-0 z-50 h-svh w-[380px] max-w-[90vw] transform bg-white shadow-xl transition-transform ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed inset-y-0 right-0 z-[70] w-[380px] max-w-[90vw] transform bg-white shadow-xl transition-transform ${isOpen ? "translate-x-0" : "translate-x-full"}`}
         role="dialog"
         aria-modal="true"
       >
@@ -34,7 +44,7 @@ export default function CartDrawer() {
           </button>
         </div>
 
-        <div className="flex h-[calc(100svh-64px-140px)] flex-col overflow-y-auto">
+        <div className="flex h-[calc(100dvh-64px-140px)] flex-col overflow-y-auto">
           {items.length === 0 ? (
             <div className="p-4 text-sm text-stone-600">Tu carrito está vacío.</div>
           ) : (

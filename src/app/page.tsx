@@ -20,18 +20,28 @@ export default function Home() {
                   Textiles, decoración, cocina, aromas e iluminación para transformar tu hogar.
                 </p>
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                  <ScrollToProductsButton targetId="productos" offset={100} className="h-11 px-6 cursor-pointer">
-                    Ver productos
-                  </ScrollToProductsButton>
-                  <Link href="/c/sale">
-                    <Button variant="outline" className="h-11 px-6 cursor-pointer">Ver SALE</Button>
-                  </Link>
+                  <div className="w-full sm:w-auto">
+                    <ScrollToProductsButton
+                      targetId="productos"
+                      offset={100}
+                      className="h-11 w-full sm:w-auto px-6 cursor-pointer"
+                    >
+                      Ver productos
+                    </ScrollToProductsButton>
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    <Link href="/c/sale" className="w-full sm:w-auto">
+                      <Button className="h-11 w-full sm:w-auto px-6 cursor-pointer" variant="outline">
+                        Ver ofertas
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
               <div className="order-1 md:order-2">
                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
                   <Image
-                    src="/portada.jpg"
+                    src="https://res.cloudinary.com/dzoupwn0e/image/upload/v1765465731/portada_wodgac.webp"
                     alt="Portada Amo mi casa"
                     fill
                     sizes="(min-width: 768px) 50vw, 100vw"

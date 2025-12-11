@@ -85,7 +85,7 @@ export const products: Product[] = [
     id: "botellita-plegable",
     name: "Botellita plegable",
     price: 25000,
-    image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1765381993/botellita_1_qmrerf_1_nmwcln.webp",
+    image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1765382601/botellita_1_qmrerf_1_c3keof.webp",
     description: "Botella plegable de silicona para llevar a todos lados.",
     colors: ["Gris", "Verde agua", "Rosa"],
     sizes: ["500ml"],

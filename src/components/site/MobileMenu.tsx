@@ -1,12 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { NAV } from "./MainNav";
+import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    lockScroll();
+    return () => {
+      unlockScroll();
+    };
+  }, [open]);
+
   return (
     <>
       <button
@@ -20,11 +30,11 @@ export default function MobileMenu() {
       {/* Overlay */}
       <div
         onClick={() => setOpen(false)}
-        className={`fixed inset-0 z-50 bg-black/40 transition-opacity md:hidden ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 z-[60] bg-black/40 transition-opacity md:hidden ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
       />
       {/* Drawer */}
       <aside
-        className={`fixed left-0 top-0 z-50 h-svh w-[85vw] max-w-[360px] transform bg-white shadow-xl transition-transform md:hidden ${open ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-[70] w-[85vw] max-w-[360px] transform bg-white shadow-xl transition-transform md:hidden ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex items-center justify-between border-b border-stone-200 p-4">
           <span className="text-sm font-semibold text-stone-900">Menú</span>

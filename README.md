@@ -1,5 +1,10 @@
 
 
+Tasks
+- Subir la imagen de portada a cloudinary
+
+
+
 Data
 - 12 Imagenes
 
