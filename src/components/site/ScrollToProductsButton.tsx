@@ -9,6 +9,8 @@ type Props = {
   children: React.ReactNode;
   className?: string;
   variant?: "default" | "outline" | "secondary" | "destructive" | "ghost" | "link";
+  style?: React.CSSProperties;
+  onClick?: (e: React.MouseEvent) => void;
 };
 
 export default function ScrollToProductsButton({
@@ -17,17 +19,12 @@ export default function ScrollToProductsButton({
   children,
   className,
   variant = "default",
+  style,
+  onClick,
 }: Props) {
-  const onClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const el = document.getElementById(targetId);
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  };
 
   return (
-    <Button onClick={onClick} className={className} variant={variant}>
+    <Button onClick={onClick} className={className} variant={variant} style={style}>
       {children}
     </Button>
   );

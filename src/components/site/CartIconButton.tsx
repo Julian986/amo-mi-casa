@@ -2,9 +2,16 @@
 
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/components/providers/CartProvider";
+import { useEffect, useState } from "react";
 
 export default function CartIconButton() {
   const { count, open } = useCart();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <button
       type="button"
@@ -13,7 +20,7 @@ export default function CartIconButton() {
       aria-label="Carrito"
     >
       <ShoppingBag className="h-5 w-5" />
-      {count > 0 && (
+      {mounted && count > 0 && (
         <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-stone-800 px-1.5 text-xs font-medium text-white">
           {count}
         </span>
@@ -21,5 +28,5 @@ export default function CartIconButton() {
     </button>
   );
 }
-
+ 
 

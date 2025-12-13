@@ -9,9 +9,10 @@ type Props = {
   name: string;
   price?: number;
   image: string;
+  addButtonStyle?: React.CSSProperties;
 };
 
-export default function ProductActions({ id, name, price, image }: Props) {
+export default function ProductActions({ id, name, price, image, addButtonStyle }: Props) {
   const { addItem, open } = useCart();
 
   const handleAdd = () => {
@@ -24,7 +25,11 @@ export default function ProductActions({ id, name, price, image }: Props) {
 
   return (
     <div className="flex gap-3">
-      <Button className="h-11 px-6 cursor-pointer flex-1" onClick={handleAdd}>
+      <Button
+        className="h-11 px-6 cursor-pointer flex-1"
+        style={addButtonStyle}
+        onClick={handleAdd}
+      >
         Agregar al carrito
       </Button>
       <a

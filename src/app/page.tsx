@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ScrollToProductsButton from "@/components/site/ScrollToProductsButton";
+import HomeCTAButtons from "@/components/site/HomeCTAButtons";
 import ProductCard from "@/components/site/ProductCard";
 import { products } from "@/data/products";
 
@@ -19,24 +20,7 @@ export default function Home() {
                 <p className="mt-3 text-stone-700">
                   Textiles, decoración, cocina, aromas e iluminación para transformar tu hogar.
                 </p>
-                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                  <div className="w-full sm:w-auto">
-                    <ScrollToProductsButton
-                      targetId="productos"
-                      offset={100}
-                      className="h-11 w-full sm:w-auto px-6 cursor-pointer"
-                    >
-                      Ver productos
-                    </ScrollToProductsButton>
-                  </div>
-                  <div className="w-full sm:w-auto">
-                    <Link href="/c/sale" className="w-full sm:w-auto">
-                      <Button className="h-11 w-full sm:w-auto px-6 cursor-pointer" variant="outline">
-                        Ver ofertas
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
+                <HomeCTAButtons />
               </div>
               <div className="order-1 md:order-2">
                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
@@ -56,9 +40,15 @@ export default function Home() {
         <section id="productos" className="mx-auto max-w-7xl px-4 py-10 scroll-mt-32 md:scroll-mt-40">
           <h2 className="text-2xl md:text-3xl font-semibold text-stone-900">Productos destacados</h2>
           <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {products.map((p) => (
-              <ProductCard key={p.id} {...p} />
-            ))}
+            {products.map((p, idx) => {
+              let addButtonStyle: React.CSSProperties | undefined = undefined;
+              if (idx === 0 || idx === 1) {
+                addButtonStyle = { background: "#fde9e9", color: "#7f6938" };
+              } else if (idx === 2 || idx === 3) {
+                addButtonStyle = { background: "#7f6939", color: "#fde9e9" };
+              }
+              return <ProductCard key={p.id} {...p} addButtonStyle={addButtonStyle} />;
+            })}
           </div>
         </section>
       </main>
