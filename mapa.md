@@ -5,6 +5,8 @@ Objetivo:
 
 
 Tasks
+- Quitar el sanbox, que sigue ahi.
+
 - El mismo diseño de la flecha izquierda de "Carrito" implementarla en productDetail "Volver"
 - Scroll hacia arriba Pagina Checkout: Al ir a esta pagina no sube hasta arriba del todo en la pagina
 - Metodos de pago, sacar el metodo de transferencia. Dejar solo MP

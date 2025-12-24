@@ -143,12 +143,74 @@ export async function POST(request: Request) {
     );
   }
 
-  const useSandbox =
-    String(process.env.MERCADOPAGO_USE_SANDBOX || "false").toLowerCase() ===
-    "true";
-  const redirectUrl = useSandbox
-    ? data?.sandbox_init_point || data?.init_point
-    : data?.init_point || data?.sandbox_init_point;
+  // Detectar automáticamente si es producción o sandbox basándose en el Access Token
+  // Access Token de producción: APP_USR-...
+  // Access Token de sandbox: TEST-...
+  const isProductionToken = accessToken.startsWith("APP_USR-");
+  const isSandboxToken = accessToken.startsWith("TEST-");
+  
+  // Verificar si hay un override explícito en la variable de entorno
+  const useSandboxEnv = process.env.MERCADOPAGO_USE_SANDBOX;
+  const forceSandbox = useSandboxEnv && String(useSandboxEnv).toLowerCase() === "true";
+  const forceProduction = useSandboxEnv && String(useSandboxEnv).toLowerCase() === "false";
+  
+  // Log para debugging
+  console.log("[mercadopago] Token type detection:", {
+    isProductionToken,
+    isSandboxToken,
+    tokenPrefix: accessToken.substring(0, 10) + "...",
+    hasInitPoint: !!data?.init_point,
+    hasSandboxInitPoint: !!data?.sandbox_init_point,
+    forceSandbox,
+    forceProduction,
+    useSandboxEnv,
+    initPoint: data?.init_point?.substring(0, 50) + "...",
+    sandboxInitPoint: data?.sandbox_init_point?.substring(0, 50) + "...",
+  });
+  
+  // Si hay un override explícito, usarlo
+  // Si no, detectar automáticamente basándose en el token
+  let redirectUrl: string | undefined;
+  
+  if (forceProduction) {
+    // Override explícito: forzar producción
+    redirectUrl = data?.init_point;
+    if (!redirectUrl) {
+      console.error("[mercadopago] Forced production but no init_point returned");
+      return NextResponse.json(
+        {
+          error: "Mercado Pago production init_point not available. Check your production credentials.",
+          details: "MERCADOPAGO_USE_SANDBOX=false but only sandbox URL was returned",
+        },
+        { status: 502 }
+      );
+    }
+  } else if (forceSandbox) {
+    // Override explícito: forzar sandbox
+    redirectUrl = data?.sandbox_init_point || data?.init_point;
+  } else if (isProductionToken) {
+    // Token de producción: SIEMPRE usar init_point (producción)
+    redirectUrl = data?.init_point;
+    if (!redirectUrl) {
+      console.error("[mercadopago] Production token but no init_point returned", {
+        hasSandboxInitPoint: !!data?.sandbox_init_point,
+        responseKeys: Object.keys(data || {}),
+      });
+      return NextResponse.json(
+        {
+          error: "Mercado Pago production init_point not available. Check your production credentials.",
+          details: "Token appears to be production but only sandbox URL was returned",
+        },
+        { status: 502 }
+      );
+    }
+  } else if (isSandboxToken) {
+    // Token de sandbox: usar sandbox_init_point
+    redirectUrl = data?.sandbox_init_point || data?.init_point;
+  } else {
+    // Fallback: si no podemos determinar, usar init_point (producción) por defecto
+    redirectUrl = data?.init_point || data?.sandbox_init_point;
+  }
 
   if (!redirectUrl) {
     return NextResponse.json(
