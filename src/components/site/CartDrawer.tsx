@@ -1,14 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 
 export default function CartDrawer() {
+  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
   const { isOpen, close, items, removeItem, clear, total } = useCart();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -17,6 +24,8 @@ export default function CartDrawer() {
       unlockScroll();
     };
   }, [isOpen]);
+
+  if (!mounted) return null;
 
   return (
     <>
@@ -86,7 +95,16 @@ export default function CartDrawer() {
             <span className="font-semibold">{formatCurrency(total)}</span>
           </div>
           <div className="flex gap-3">
-            <Button className="flex-1 cursor-pointer">Finalizar compra</Button>
+            <Button
+              className="flex-1 cursor-pointer"
+              onClick={() => {
+                close();
+                router.push("/checkout");
+              }}
+              disabled={items.length === 0}
+            >
+              Finalizar compra
+            </Button>
             <Button variant="outline" className="cursor-pointer" onClick={clear}>
               Vaciar
             </Button>

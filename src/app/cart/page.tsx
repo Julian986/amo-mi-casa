@@ -2,15 +2,29 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
 
 export default function CartPage() {
+  const router = useRouter();
   const { items, removeItem, clear, total } = useCart();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
-      <h1 className="text-2xl font-semibold text-stone-900">Carrito</h1>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 text-stone-700 hover:bg-stone-50 cursor-pointer"
+          aria-label="Volver"
+          title="Volver"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+        <h1 className="text-2xl font-semibold text-stone-900">Carrito</h1>
+      </div>
       {items.length === 0 ? (
         <div className="mt-6 text-stone-700">
           Tu carrito está vacío.{" "}
@@ -65,7 +79,13 @@ export default function CartPage() {
               </span>
             </div>
             <div className="mt-4 flex gap-3">
-              <Button className="flex-1 cursor-pointer">Finalizar compra</Button>
+              <Button
+                className="flex-1 cursor-pointer"
+                onClick={() => router.push("/checkout")}
+                disabled={items.length === 0}
+              >
+                Finalizar compra
+              </Button>
               <Button
                 variant="outline"
                 className="cursor-pointer"

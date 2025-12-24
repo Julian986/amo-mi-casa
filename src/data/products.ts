@@ -93,6 +93,7 @@ export const products: Product[] = [
   {
     id: "repasador",
     name: "Repasador",
+    price: 10,
     image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1765382612/repasador_jhdcvg.webp",
     description: "Repasador de algodón de gran absorción.",
     colors: ["Crudo", "Gris", "Visón"],
