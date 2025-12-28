@@ -32,9 +32,9 @@ export default function Header() {
             </div>
             <div className="flex items-center gap-2 justify-self-end">
               <Link
-                href="/account"
+                href="/admin"
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 text-stone-700 hover:bg-stone-50"
-                aria-label="Ingresá / Registrate"
+                aria-label="Panel de administración"
               >
                 <User className="h-5 w-5" />
               </Link>
