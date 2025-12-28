@@ -117,27 +117,85 @@ export async function POST(request: Request) {
       }
 
       const payment = await mpRes.json();
-      const preferenceId = payment.preference_id;
+      let preferenceId = payment.preference_id;
       const mpStatus = payment.status; // approved, pending, rejected, etc.
+      const merchantOrderId = payment.order?.id;
 
       console.log("[webhook] Payment details from MP", {
         paymentId,
         preferenceId,
         mpStatus,
+        merchantOrderId,
         paymentKeys: Object.keys(payment),
       });
 
+      // Si no hay preference_id en el pago, intentar obtenerlo desde merchant_order
+      if (!preferenceId && merchantOrderId) {
+        console.log("[webhook] preference_id not in payment, fetching from merchant_order", { merchantOrderId });
+        try {
+          const orderRes = await fetch(
+            `https://api.mercadopago.com/merchant_orders/${merchantOrderId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (orderRes.ok) {
+            const merchantOrder = await orderRes.json();
+            preferenceId = merchantOrder.preference_id;
+            console.log("[webhook] Got preference_id from merchant_order", { 
+              merchantOrderId, 
+              preferenceId,
+            });
+          } else {
+            console.warn("[webhook] Failed to fetch merchant_order", {
+              status: orderRes.status,
+              merchantOrderId,
+            });
+          }
+        } catch (error) {
+          console.error("[webhook] Error fetching merchant_order", error);
+        }
+      }
+
       if (!preferenceId) {
-        console.warn("[webhook] Missing preference_id in payment", { 
-          paymentId, 
+        console.warn("[webhook] Missing preference_id in payment and merchant_order", { 
+          paymentId,
+          merchantOrderId,
           paymentKeys: Object.keys(payment),
-          payment: JSON.stringify(payment).substring(0, 500),
         });
+        // Intentar buscar por paymentId directamente (puede que ya esté guardado)
+        const orderByPayment = await findOrderByPaymentId(paymentId);
+        if (orderByPayment) {
+          console.log("[webhook] Found order by paymentId, updating status", {
+            orderId: orderByPayment.orderId,
+            paymentId,
+          });
+          
+          // Mapear estado de MP a nuestro estado
+          let orderStatus: "pending" | "approved" | "rejected" | "cancelled" | "refunded" = "pending";
+          if (mpStatus === "approved") {
+            orderStatus = "approved";
+          } else if (mpStatus === "rejected" || mpStatus === "cancelled") {
+            orderStatus = "rejected";
+          } else if (mpStatus === "refunded") {
+            orderStatus = "refunded";
+          }
+
+          await updateOrderStatus(orderByPayment.orderId, orderStatus, paymentId, mpStatus);
+          return NextResponse.json({ 
+            received: true, 
+            orderId: orderByPayment.orderId, 
+            status: orderStatus,
+          });
+        }
+        
         // No devolvemos error 400, devolvemos 200 para que MP sepa que recibimos la notificación
-        // pero no podemos procesarla sin preference_id
         return NextResponse.json({ 
           received: true, 
-          warning: "Missing preference_id",
+          warning: "Missing preference_id and order not found by paymentId",
           paymentId,
         });
       }
