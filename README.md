@@ -49,11 +49,38 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ### Webhook de Mercado Pago
 
-1. Ve a tu cuenta de Mercado Pago Developers
-2. Selecciona tu aplicación
-3. Ve a "Webhooks"
-4. Agrega la URL: `https://tu-dominio.com/api/mercadopago/webhook`
-5. Selecciona los eventos: `payment`, `merchant_order`
+**⚠️ IMPORTANTE**: Sin configurar el webhook, los pagos quedarán en estado "pending" y nunca se actualizarán automáticamente.
+
+#### Configuración en Mercado Pago Developers:
+
+1. Ve a [Mercado Pago Developers](https://www.mercadopago.com.ar/developers)
+2. Inicia sesión con la cuenta de tu cliente (la que recibe los pagos)
+3. Selecciona tu aplicación (ej: "amo mi casa")
+4. En el menú lateral, busca **"Notificaciones Webhooks"** o **"Webhooks"**
+5. Haz clic en **"Configurar notificaciones"** o **"Agregar URL"**
+6. Ingresa la URL de tu webhook:
+   ```
+   https://amo-mi-casa.vercel.app/api/mercadopago/webhook
+   ```
+   (Reemplaza con tu dominio real si es diferente)
+7. Selecciona los eventos que quieres recibir:
+   - ✅ **payment** (obligatorio - notifica cambios en pagos)
+   - ✅ **merchant_order** (opcional - notifica cambios en órdenes)
+8. Guarda la configuración
+
+#### Verificación:
+
+- Mercado Pago puede hacer un GET a tu webhook para verificar que existe
+- Si todo está bien, verás un check verde en el panel
+- Los pagos aprobados deberían actualizar automáticamente el estado en `/admin`
+
+#### Debugging:
+
+Si los pagos siguen en "pending":
+1. Verifica los logs en Vercel → tu proyecto → Logs
+2. Busca mensajes que empiecen con `[webhook]`
+3. Verifica que la URL del webhook en Mercado Pago sea exactamente: `https://tu-dominio.com/api/mercadopago/webhook`
+4. Asegúrate de que el webhook esté configurado en **producción**, no en sandbox
 
 ## 📦 Instalación
 

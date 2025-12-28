@@ -11,6 +11,14 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
+    // Log inicial para debugging
+    console.log("[webhook] Received notification", {
+      type: body.type,
+      action: body.action,
+      dataId: body.data?.id,
+      timestamp: new Date().toISOString(),
+    });
+
     // Mercado Pago puede enviar diferentes tipos de notificaciones
     // Tipo "payment" es el más común
     if (body.type === "payment") {
@@ -104,6 +112,8 @@ export async function POST(request: Request) {
 export async function GET() {
   return NextResponse.json({ message: "Mercado Pago webhook endpoint" });
 }
+
+
 
 
 
