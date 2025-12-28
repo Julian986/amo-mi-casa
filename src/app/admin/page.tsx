@@ -26,6 +26,13 @@ export default function AdminPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [error, setError] = useState<string | null>(null);
 
+  // Scroll suave hacia arriba al montar la página
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, []);
+
   const handleLogin = async () => {
     if (!apiKey.trim()) {
       setError("Ingresá una API key");
