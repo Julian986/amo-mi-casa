@@ -27,7 +27,7 @@ export default function ProductActions({ id, name, price, image, addButtonStyle 
     <div className="flex gap-3">
       <Button
         className="h-11 px-6 cursor-pointer flex-1"
-        style={addButtonStyle}
+        style={{ backgroundColor: "#fde9e9", color: "#7f6938", ...addButtonStyle }}
         onClick={handleAdd}
       >
         Agregar al carrito

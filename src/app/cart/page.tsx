@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { useCart } from "@/components/providers/CartProvider";
@@ -10,6 +11,11 @@ import { Button } from "@/components/ui/button";
 export default function CartPage() {
   const router = useRouter();
   const { items, removeItem, clear, total } = useCart();
+
+  // Scroll suave hacia arriba al montar la página
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">

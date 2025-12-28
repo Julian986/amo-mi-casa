@@ -40,15 +40,9 @@ export default function Home() {
         <section id="productos" className="mx-auto max-w-7xl px-4 py-10 scroll-mt-32 md:scroll-mt-40">
           <h2 className="text-2xl md:text-3xl font-semibold text-stone-900">Productos destacados</h2>
           <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {products.map((p, idx) => {
-              let addButtonStyle: React.CSSProperties | undefined = undefined;
-              if (idx === 0 || idx === 1) {
-                addButtonStyle = { background: "#fde9e9", color: "#7f6938" };
-              } else if (idx === 2 || idx === 3) {
-                addButtonStyle = { background: "#7f6939", color: "#fde9e9" };
-              }
-              return <ProductCard key={p.id} {...p} addButtonStyle={addButtonStyle} />;
-            })}
+            {products.map((p) => (
+              <ProductCard key={p.id} {...p} />
+            ))}
           </div>
         </section>
       </main>

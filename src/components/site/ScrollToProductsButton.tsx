@@ -22,9 +22,31 @@ export default function ScrollToProductsButton({
   style,
   onClick,
 }: Props) {
+  const handleClick = (e: React.MouseEvent) => {
+    // Si hay un onClick personalizado, ejecutarlo primero
+    if (onClick) {
+      onClick(e);
+      // Si el onClick previene el comportamiento por defecto, no hacer scroll
+      if (e.defaultPrevented) {
+        return;
+      }
+    }
+
+    // Hacer scroll suave hacia el elemento objetivo
+    const element = document.getElementById(targetId);
+    if (element) {
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
-    <Button onClick={onClick} className={className} variant={variant} style={style}>
+    <Button onClick={handleClick} className={className} variant={variant} style={style}>
       {children}
     </Button>
   );

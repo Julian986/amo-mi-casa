@@ -15,7 +15,6 @@ type ProductCardProps = {
   objectPosition?: string;
   badge?: string;
   href?: string;
-  addButtonStyle?: React.CSSProperties;
 };
 
 export default function ProductCard({
@@ -27,7 +26,6 @@ export default function ProductCard({
   objectPosition,
   badge,
   href = `/p/${id}`,
-  addButtonStyle,
 }: ProductCardProps) {
   const { addItem } = useCart();
   const hasDiscount =
@@ -77,9 +75,9 @@ export default function ProductCard({
           )}
         </div>
         <Button
-          className="w-full cursor-pointer"
-          style={{ cursor: "pointer", ...(addButtonStyle ?? {}) }}
+          className="w-full"
           variant="default"
+          style={{ backgroundColor: "#fde9e9", color: "#7f6938" }}
           onClick={() => addItem({ id, name, price, image })}
         >
           Agregar al carrito

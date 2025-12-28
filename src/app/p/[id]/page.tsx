@@ -31,16 +31,6 @@ export default async function ProductDetail({ params }: PageProps) {
   const product = getProductById(id);
   if (!product) return notFound();
 
-  const idx = products.findIndex((p) => p.id === id);
-  let addButtonStyle: React.CSSProperties | undefined = undefined;
-  if (idx === 0 || idx === 1) {
-    // mismos colores que en la home para índices 0 y 1
-    addButtonStyle = { background: "#fde9e9", color: "#7f6938" };
-  } else if (idx === 2 || idx === 3) {
-    // mismos colores que en la home para índices 2 y 3
-    addButtonStyle = { background: "#7f6939", color: "#fde9e9" };
-  }
-
   return (
     <div className="mx-auto max-w-7xl px-4 pt-0 md:pt-0 pb-10">
       <ScrollToTop />
@@ -110,7 +100,6 @@ export default async function ProductDetail({ params }: PageProps) {
             name={product.name}
             price={product.price}
             image={String(product.image)}
-            addButtonStyle={addButtonStyle}
           />
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

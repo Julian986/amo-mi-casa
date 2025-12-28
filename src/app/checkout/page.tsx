@@ -1,26 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  TRANSFER_BANK_DETAILS,
-  TRANSFER_DISCOUNT_PERCENT,
-  WHATSAPP_PHONE,
-} from "@/lib/constants";
-
-type PaymentMethod = "transfer" | "mercadopago";
-
 const CHECKOUT_DRAFT_KEY = "amc_checkout_draft_v1";
 
 export default function CheckoutPage() {
   const { items, total, clear } = useCart();
-
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("transfer");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -30,6 +20,16 @@ export default function CheckoutPage() {
   const [draftHydrated, setDraftHydrated] = useState(false);
   const [mpLoading, setMpLoading] = useState(false);
   const [mpError, setMpError] = useState<string | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+
+  // Scroll suave hacia arriba al montar la página
+  useEffect(() => {
+    // Usar requestAnimationFrame para asegurar que se ejecute después del render
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, []);
 
   // Restaurar borrador de checkout al montar (para que no se pierdan los datos al ir al carrito y volver).
   useEffect(() => {
@@ -37,7 +37,6 @@ export default function CheckoutPage() {
       const raw = sessionStorage.getItem(CHECKOUT_DRAFT_KEY);
       if (!raw) return;
       const draft = JSON.parse(raw) as Partial<{
-        paymentMethod: PaymentMethod;
         fullName: string;
         phone: string;
         email: string;
@@ -45,8 +44,6 @@ export default function CheckoutPage() {
         postalCode: string;
         notes: string;
       }>;
-
-      if (draft.paymentMethod) setPaymentMethod(draft.paymentMethod);
       if (typeof draft.fullName === "string") setFullName(draft.fullName);
       if (typeof draft.phone === "string") setPhone(draft.phone);
       if (typeof draft.email === "string") setEmail(draft.email);
@@ -68,7 +65,6 @@ export default function CheckoutPage() {
       sessionStorage.setItem(
         CHECKOUT_DRAFT_KEY,
         JSON.stringify({
-          paymentMethod,
           fullName,
           phone,
           email,
@@ -80,59 +76,44 @@ export default function CheckoutPage() {
     } catch {
       // ignore
     }
-  }, [draftHydrated, paymentMethod, fullName, phone, email, address, postalCode, notes]);
+  }, [draftHydrated, fullName, phone, email, address, postalCode, notes]);
 
-  const discountAmount = useMemo(() => {
-    if (paymentMethod !== "transfer") return 0;
-    return Math.round((total * TRANSFER_DISCOUNT_PERCENT) / 100);
-  }, [paymentMethod, total]);
+  // Validar teléfono (formato argentino: acepta números con o sin espacios, guiones, paréntesis)
+  const isValidPhone = (phoneValue: string): boolean => {
+    // Eliminar espacios, guiones, paréntesis y otros caracteres no numéricos
+    const digitsOnly = phoneValue.replace(/\D/g, "");
+    // Debe tener entre 8 y 15 dígitos (formato argentino)
+    return digitsOnly.length >= 8 && digitsOnly.length <= 15;
+  };
 
-  const totalWithDiscount = Math.max(0, total - discountAmount);
+  // Validar formulario
+  const isFormValid = (): boolean => {
+    const nameValid = fullName.trim().length > 0;
+    const phoneValid = isValidPhone(phone);
+    return nameValid && phoneValid;
+  };
 
-  const waHref = useMemo(() => {
-    const lines: string[] = [];
-    lines.push("Hola! Quiero finalizar una compra.");
-    lines.push("");
-    lines.push("Pedido:");
-    for (const item of items) {
-      const unit = typeof item.price === "number" ? item.price : 0;
-      lines.push(`- ${item.name} x${item.quantity} (${formatCurrency(unit)})`);
+  // Validar nombre
+  const handleNameChange = (value: string) => {
+    setFullName(value);
+    if (value.trim().length === 0) {
+      setNameError("El nombre es obligatorio");
+    } else {
+      setNameError(null);
     }
-    lines.push("");
-    lines.push(`Subtotal: ${formatCurrency(total)}`);
-    if (paymentMethod === "transfer") {
-      lines.push(`Descuento transferencia (${TRANSFER_DISCOUNT_PERCENT}%): -${formatCurrency(discountAmount)}`);
-      lines.push(`Total con descuento: ${formatCurrency(totalWithDiscount)}`);
-    }
-    lines.push("");
-    lines.push("Datos para envio:");
-    if (fullName) lines.push(`Nombre: ${fullName}`);
-    if (phone) lines.push(`Teléfono: ${phone}`);
-    if (email) lines.push(`Email: ${email}`);
-    if (address) lines.push(`Dirección: ${address}`);
-    if (postalCode) lines.push(`CP: ${postalCode}`);
-    if (notes) lines.push(`Notas: ${notes}`);
-    lines.push("");
-    lines.push(`Medio de pago: ${paymentMethodLabel(paymentMethod)}`);
-    if (paymentMethod === "transfer") {
-      lines.push("Transferencia: ¿me pasás alias/CBU y el total final para transferir?");
-    }
+  };
 
-    const text = encodeURIComponent(lines.join("\n"));
-    return `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
-  }, [
-    items,
-    total,
-    paymentMethod,
-    fullName,
-    phone,
-    email,
-    address,
-    postalCode,
-    notes,
-    discountAmount,
-    totalWithDiscount,
-  ]);
+  // Validar teléfono
+  const handlePhoneChange = (value: string) => {
+    setPhone(value);
+    if (value.trim().length === 0) {
+      setPhoneError("El teléfono es obligatorio");
+    } else if (!isValidPhone(value)) {
+      setPhoneError("Ingresá un número de teléfono válido");
+    } else {
+      setPhoneError(null);
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -154,7 +135,7 @@ export default function CheckoutPage() {
         <div>
           <h1 className="text-2xl font-semibold text-stone-900">Checkout</h1>
           <p className="mt-1 text-sm text-stone-600">
-            Elegí tu medio de pago. El envío se coordina luego de la compra.
+            El envío se coordina luego de la compra.
           </p>
         </div>
         <Button variant="outline" size="sm" asChild>
@@ -171,22 +152,37 @@ export default function CheckoutPage() {
             <h2 className="text-sm font-semibold text-stone-900">Datos</h2>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Nombre y apellido</Label>
+                <Label htmlFor="fullName">
+                  Nombre y apellido <span className="text-red-600">*</span>
+                </Label>
                 <Input
                   id="fullName"
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  onChange={(e) => handleNameChange(e.target.value)}
                   placeholder="Tu nombre"
+                  className={nameError ? "border-red-500" : ""}
+                  required
                 />
+                {nameError && (
+                  <p className="text-xs text-red-600">{nameError}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">WhatsApp / Teléfono</Label>
+                <Label htmlFor="phone">
+                  WhatsApp / Teléfono <span className="text-red-600">*</span>
+                </Label>
                 <Input
                   id="phone"
+                  type="tel"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
                   placeholder="Ej: 11 5056 2136"
+                  className={phoneError ? "border-red-500" : ""}
+                  required
                 />
+                {phoneError && (
+                  <p className="text-xs text-red-600">{phoneError}</p>
+                )}
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="email">Email (opcional)</Label>
@@ -226,48 +222,6 @@ export default function CheckoutPage() {
               </div>
             </div>
           </section>
-
-          <section className="rounded-lg border border-stone-200 bg-white p-4">
-            <h2 className="text-sm font-semibold text-stone-900">Medio de pago</h2>
-            <div className="mt-4 grid gap-3">
-              <label className="flex items-center gap-2 text-sm text-stone-800">
-                <input
-                  type="radio"
-                  name="payment"
-                  value="transfer"
-                  checked={paymentMethod === "transfer"}
-                  onChange={() => setPaymentMethod("transfer")}
-                />
-                Transferencia / efectivo ({TRANSFER_DISCOUNT_PERCENT}% OFF)
-              </label>
-              <label className="flex items-center gap-2 text-sm text-stone-800">
-                <input
-                  type="radio"
-                  name="payment"
-                  value="mercadopago"
-                  checked={paymentMethod === "mercadopago"}
-                  onChange={() => setPaymentMethod("mercadopago")}
-                />
-                Mercado Pago
-              </label>
-            </div>
-
-            {paymentMethod === "transfer" && (
-              <div className="mt-4 rounded-md border border-stone-200 bg-stone-50 p-3 text-sm text-stone-800">
-                <div className="font-medium">Datos de transferencia</div>
-                <div className="mt-2 grid gap-1">
-                  <div>Titular: {TRANSFER_BANK_DETAILS.titular}</div>
-                  <div>Banco: {TRANSFER_BANK_DETAILS.banco}</div>
-                  <div>Alias: {TRANSFER_BANK_DETAILS.alias}</div>
-                  <div>CBU: {TRANSFER_BANK_DETAILS.cbu}</div>
-                  <div>CUIT: {TRANSFER_BANK_DETAILS.cuit}</div>
-                </div>
-                <div className="mt-2 text-xs text-stone-600">
-                  Tip: completá estos datos en <code className="rounded bg-white px-1 py-0.5">src/lib/constants.ts</code>.
-                </div>
-              </div>
-            )}
-          </section>
         </div>
 
         <aside className="rounded-lg border border-stone-200 bg-white p-4 h-fit">
@@ -277,93 +231,83 @@ export default function CheckoutPage() {
               <span>Subtotal</span>
               <span className="font-medium">{formatCurrency(total)}</span>
             </div>
-            {paymentMethod === "transfer" && (
-              <>
-                <div className="flex items-center justify-between">
-                  <span>Descuento transferencia</span>
-                  <span className="font-medium">-{formatCurrency(discountAmount)}</span>
-                </div>
-                <div className="flex items-center justify-between border-t border-stone-200 pt-2">
-                  <span className="text-stone-900 font-semibold">Total</span>
-                  <span className="text-stone-900 font-semibold">{formatCurrency(totalWithDiscount)}</span>
-                </div>
-              </>
-            )}
-            {paymentMethod === "mercadopago" && (
-              <div className="flex items-center justify-between border-t border-stone-200 pt-2">
-                <span className="text-stone-900 font-semibold">Total</span>
-                <span className="text-stone-900 font-semibold">{formatCurrency(total)}</span>
-              </div>
-            )}
+            <div className="flex items-center justify-between border-t border-stone-200 pt-2">
+              <span className="text-stone-900 font-semibold">Total</span>
+              <span className="text-stone-900 font-semibold">{formatCurrency(total)}</span>
+            </div>
           </div>
 
           <div className="mt-4 space-y-3">
-            {paymentMethod === "transfer" ? (
-              <a href={waHref} target="_blank" rel="noopener noreferrer">
-                <Button className="w-full cursor-pointer">
-                  Enviar pedido por WhatsApp
-                </Button>
-              </a>
-            ) : (
-              <>
-                <Button
-                  className="w-full cursor-pointer"
-                  onClick={async () => {
-                    setMpError(null);
-                    setMpLoading(true);
-                    try {
-                      const payload = {
-                        items: items.map((i) => ({ id: i.id, quantity: i.quantity })),
-                        payer: {
-                          email: email || undefined,
-                          name: fullName || undefined,
-                          phone: phone || undefined,
-                        },
-                        customer: {
-                          fullName: fullName || undefined,
-                          email: email || undefined,
-                          phone: phone || undefined,
-                          address: address || undefined,
-                          postalCode: postalCode || undefined,
-                          notes: notes || undefined,
-                        },
-                      };
-                      const res = await fetch("/api/mercadopago/create-preference", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload),
-                      });
-                      const data = await res.json().catch(() => null);
-                      if (!res.ok) {
-                        const details =
-                          typeof data?.details === "string" ? data.details : "";
-                        const mpStatus =
-                          typeof data?.mp_status === "number" ? ` (MP ${data.mp_status})` : "";
-                        throw new Error(
-                          `${data?.error || "No se pudo crear la preferencia de pago"}${mpStatus}${
-                            details ? `: ${details}` : ""
-                          }`
-                        );
-                      }
-                      const url = data?.redirectUrl as string | undefined;
-                      if (!url) throw new Error("Mercado Pago no devolvió la URL de pago");
-                      window.location.href = url;
-                    } catch (e) {
-                      setMpError(e instanceof Error ? e.message : "Error desconocido");
-                    } finally {
-                      setMpLoading(false);
-                    }
-                  }}
-                  disabled={mpLoading}
-                >
-                  {mpLoading ? "Redirigiendo a Mercado Pago..." : "Pagar con Mercado Pago"}
-                </Button>
-                {mpError && (
-                  <p className="text-xs text-red-600">
-                    {mpError}. Revisá que tengas configurado <code className="rounded bg-white px-1 py-0.5">MERCADOPAGO_ACCESS_TOKEN</code>.
-                  </p>
-                )}
-              </>
+            <Button
+              className="w-full cursor-pointer"
+              onClick={async () => {
+                // Validar antes de proceder
+                if (!fullName.trim()) {
+                  setNameError("El nombre es obligatorio");
+                  return;
+                }
+                if (!phone.trim()) {
+                  setPhoneError("El teléfono es obligatorio");
+                  return;
+                }
+                if (!isValidPhone(phone)) {
+                  setPhoneError("Ingresá un número de teléfono válido");
+                  return;
+                }
+
+                setMpError(null);
+                setMpLoading(true);
+                try {
+                  const payload = {
+                    items: items.map((i) => ({ id: i.id, quantity: i.quantity })),
+                    payer: {
+                      email: email || undefined,
+                      name: fullName || undefined,
+                      phone: phone || undefined,
+                    },
+                    customer: {
+                      fullName: fullName || undefined,
+                      email: email || undefined,
+                      phone: phone || undefined,
+                      address: address || undefined,
+                      postalCode: postalCode || undefined,
+                      notes: notes || undefined,
+                    },
+                  };
+                  const res = await fetch("/api/mercadopago/create-preference", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                  });
+                  const data = await res.json().catch(() => null);
+                  if (!res.ok) {
+                    const details =
+                      typeof data?.details === "string" ? data.details : "";
+                    const mpStatus =
+                      typeof data?.mp_status === "number" ? ` (MP ${data.mp_status})` : "";
+                    throw new Error(
+                      `${data?.error || "No se pudo crear la preferencia de pago"}${mpStatus}${
+                        details ? `: ${details}` : ""
+                      }`
+                    );
+                  }
+                  const url = data?.redirectUrl as string | undefined;
+                  if (!url) throw new Error("Mercado Pago no devolvió la URL de pago");
+                  window.location.href = url;
+                } catch (e) {
+                  setMpError(e instanceof Error ? e.message : "Error desconocido");
+                } finally {
+                  setMpLoading(false);
+                }
+              }}
+              disabled={mpLoading || !isFormValid()}
+            >
+              {mpLoading ? "Redirigiendo a Mercado Pago..." : "Pagar con Mercado Pago"}
+            </Button>
+            {mpError && (
+              <p className="text-xs text-red-600">
+                {mpError}. Revisá que tengas configurado <code className="rounded bg-white px-1 py-0.5">MERCADOPAGO_ACCESS_TOKEN</code>.
+              </p>
             )}
             <Button
               variant="outline"
@@ -387,15 +331,6 @@ export default function CheckoutPage() {
       </div>
     </div>
   );
-}
-
-function paymentMethodLabel(method: PaymentMethod): string {
-  switch (method) {
-    case "transfer":
-      return "Transferencia";
-    case "mercadopago":
-      return "Mercado Pago";
-  }
 }
 
 function formatCurrency(value: number): string {
