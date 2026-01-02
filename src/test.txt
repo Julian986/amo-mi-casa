@@ -1,0 +1,1 @@
+VERIFICACION: edición en directorio real (no worktree) - 2026-01-02

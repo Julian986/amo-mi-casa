@@ -1,7 +1,8 @@
 
 
-
-
+Tasks
+- Guardar el nombre y el telefono del usuario cuando pone pagar
+- Mensaje de error del formulario de admin
 
 
 

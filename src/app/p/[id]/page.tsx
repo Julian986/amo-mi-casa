@@ -2,7 +2,6 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { products, getProductById } from "@/data/products";
 import type { Metadata } from "next";
-import { Button } from "@/components/ui/button";
 import BackButton from "@/components/site/BackButton";
 import PaymentMethods from "@/components/site/PaymentMethods";
 import ProductActions from "@/components/site/ProductActions";
@@ -52,7 +51,7 @@ export default async function ProductDetail({ params }: PageProps) {
         <div className="flex flex-col gap-5">
           <h1 className="text-2xl font-semibold text-stone-900">{product.name}</h1>
           <div className="text-xl font-semibold text-stone-900">
-            {typeof product.price === "number" ? formatCurrency(product.price) : "$"}
+            {typeof product.price === "number" ? formatCurrency(product.price) : "Consultar"}
           </div>
           {product.description && (
             <div className="text-sm text-stone-700 leading-relaxed">
