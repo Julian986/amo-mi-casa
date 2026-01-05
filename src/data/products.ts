@@ -30,26 +30,9 @@ export const products: Product[] = [
     sizes: ["1,40 x 2,00", "1,40 x 2,40"],
   },
   {
-    id: "bolso-matero",
-    name: "Bolso matero",
-    price: 45000,
-    image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1765382601/mochila_matera_wcfcag.webp",
-    objectPosition: "top",
-    description: "Bolso matero con compartimentos y aislación ligera.",
-    colors: ["Arena", "Verde oliva", "Gris"],
-  },
-  {
-    id: "bolso-playero",
-    name: "Bolso playero",
-    image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1765382600/bolso_playero_urc9ek.webp",
-    objectPosition: "center",
-    description: "Bolso amplio y liviano para playa o pileta.",
-    colors: ["Natural", "Celeste", "Coral"],
-  },
-  {
     id: "lonchera-ninos",
     name: "Frascos contenedores",
-    price: 45000,
+    price: 50000,
     image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1765380007/comidita_2_mdtlfv.webp",
     description:
       "De plástico resistente, herméticos y con cierre seguro. Incluyen 6 frascos de diferentes tamaños.",
@@ -110,14 +93,6 @@ export const products: Product[] = [
     sizes: ["50 x 70 cm"],
   },
   {
-    id: "termo",
-    name: "Termo",
-    image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1765382610/termo_nl3cmg.webp",
-    description: "Termo con doble pared, mantiene la temperatura por horas.",
-    colors: ["Acero", "Negro"],
-    sizes: ["750ml", "1L"],
-  },
-  {
     id: "pava-electrica-sensor",
     name: "Pava Eléctrica Tokyo",
     price: 60000,
@@ -137,17 +112,10 @@ export const products: Product[] = [
     id: "cafetera-kiowa",
     name: "Cafetera Kiowa",
     price: 52000,
-    image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767202435/cafetera_kiowa_ljoyip.webp",
+    image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767614184/cafetera_omobai_1_wpwkcm.webp",
     description:
       "Cafetera con filtro, botón con indicador luminoso, medidor de nivel de agua y filtro de café removible. Jarra de vidrio con capacidad para 12 tazas.",
     colors: ["Negro"],
-  },
-  {
-    id: "cafetera-omobai",
-    name: "Cafetera Omobai",
-    price: 28500,
-    image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767202435/cafetera_omobai.webp",
-    description: "Cafetera Omobai.",
   },
   {
     id: "humidificador-aroma-ultrasonico",
@@ -161,10 +129,52 @@ export const products: Product[] = [
   {
     id: "kit-utensilios-silicona-x19",
     name: "Kit utensilios de silicona x19 piezas",
+    price: 40000,
     image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767392085/Kit_utensilios_prod_nmsyyf.webp",
     description:
       "Incluye tabla de picar, set de cuchillos, tijera, pinza y batidor.",
     colors: ["Gris y madera"],
+  },
+  {
+    id: "auriculares-usb-blanco",
+    name: "Auriculares USB (blanco)",
+    price: 30000,
+    image:
+      "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767614185/auriculares_usb_blanco_1_uja1hd.webp",
+    description: "Auriculares USB.",
+    colors: ["Blanco"],
+  },
+  {
+    id: "auriculares-xaea",
+    name: "Auriculares Xaea",
+    image:
+      "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767614185/Auriculares_Xaea_1_hoamdu.webp",
+    description: "Auriculares. Precio a consultar.",
+  },
+  {
+    id: "auriculares-usb-negro",
+    name: "Auriculares USB (negro)",
+    price: 30000,
+    image:
+      "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767613838/auriculares_usb_negro_1_e89hcs.webp",
+    description: "Auriculares USB.",
+    colors: ["Negro"],
+  },
+  {
+    id: "parlante-mediano-con-microfono",
+    name: "Parlante mediano con micrófono",
+    price: 30000,
+    image:
+      "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767612981/parlante_x7sy4x.webp",
+    description: "De fácil traslado. Cargador USB. Larga duración de batería.",
+  },
+  {
+    id: "porta-maple",
+    name: "Porta maple",
+    price: 30000,
+    image:
+      "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767613585/porta-maple_1_arlev5.webp",
+    description: "Ideal para el traslado en tus compras.",
   },
  
 ];

@@ -29,7 +29,7 @@ export function validateApiKey(request: NextRequest): boolean {
 export function requireAuth(request: NextRequest): NextResponse | null {
   if (!validateApiKey(request)) {
     return NextResponse.json(
-      { error: "Unauthorized. Provide a valid API key in 'x-api-key' header or 'Authorization: Bearer <key>' header." },
+      { error: "Credenciales incorrectas" },
       { status: 401 }
     );
   }

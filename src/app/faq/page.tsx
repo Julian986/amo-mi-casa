@@ -8,7 +8,7 @@ export default function FAQPage() {
     },
     {
       q: "¿Hacen envíos? ¿Cuánto tardan?",
-      a: "Sí, realizamos envíos a todo el país. El tiempo estimado es de 2 a 7 días hábiles según el destino.",
+      a: "Sí, realizamos envíos a todo el país. El envío se coordina luego de la compra. A Mar del Plata el envío es gratis.",
     },
     {
       q: "¿Cómo coordino el retiro por el local?",
@@ -20,7 +20,7 @@ export default function FAQPage() {
     },
     {
       q: "¿Cómo calculo el costo de envío?",
-      a: "Podés calcularlo en el checkout ingresando tu código postal.",
+      a: "El costo de envío se coordina luego de la compra. Si tu dirección es en Mar del Plata, el envío es gratis.",
     },
   ];
 

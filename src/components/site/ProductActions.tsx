@@ -14,6 +14,7 @@ type Props = {
 
 export default function ProductActions({ id, name, price, image, addButtonStyle }: Props) {
   const { addItem, open } = useCart();
+  const isPriced = typeof price === "number";
 
   const handleAdd = () => {
     addItem({ id, name, price, image }, 1);
@@ -25,21 +26,23 @@ export default function ProductActions({ id, name, price, image, addButtonStyle 
 
   return (
     <div className="flex gap-3">
-      <Button
-        className="h-11 px-6 cursor-pointer flex-1"
-        style={{ backgroundColor: "#fde9e9", color: "#7f6938", ...addButtonStyle }}
-        onClick={handleAdd}
-      >
-        Agregar al carrito
-      </Button>
+      {isPriced && (
+        <Button
+          className="h-11 px-6 cursor-pointer flex-1"
+          style={{ backgroundColor: "#fde9e9", color: "#7f6938", ...addButtonStyle }}
+          onClick={handleAdd}
+        >
+          Agregar al carrito
+        </Button>
+      )}
       <a
         href={waHref}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-1"
+        className={isPriced ? "flex-1" : "w-full"}
       >
         <Button className="w-full h-11 cursor-pointer" variant="secondary">
-          Consultar
+          {isPriced ? "Consultar" : "Consultar precio"}
         </Button>
       </a>
     </div>

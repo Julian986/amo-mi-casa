@@ -93,6 +93,8 @@ export default function CheckoutPage() {
     return nameValid && phoneValid;
   };
 
+  const isMarDelPlataAddress = isMarDelPlata(address);
+
   // Validar nombre
   const handleNameChange = (value: string) => {
     setFullName(value);
@@ -135,7 +137,7 @@ export default function CheckoutPage() {
         <div>
           <h1 className="text-2xl font-semibold text-stone-900">Checkout</h1>
           <p className="mt-1 text-sm text-stone-600">
-            El envío se coordina luego de la compra.
+            El envío se coordina luego de la compra. Envío gratis a Mar del Plata.
           </p>
         </div>
         <Button variant="outline" size="sm" asChild>
@@ -201,6 +203,13 @@ export default function CheckoutPage() {
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Calle, número, piso/depto, localidad"
                 />
+                {address.trim().length > 0 && (
+                  <p className="text-xs text-stone-600">
+                    {isMarDelPlataAddress
+                      ? "Envío gratis a Mar del Plata."
+                      : "Tip: si tu dirección es en Mar del Plata, el envío es gratis."}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="postalCode">Código postal (opcional)</Label>
@@ -230,6 +239,12 @@ export default function CheckoutPage() {
             <div className="flex items-center justify-between">
               <span>Subtotal</span>
               <span className="font-medium">{formatCurrency(total)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Envío</span>
+              <span className="font-medium">
+                {isMarDelPlataAddress ? "Gratis" : "A coordinar"}
+              </span>
             </div>
             <div className="flex items-center justify-between border-t border-stone-200 pt-2">
               <span className="text-stone-900 font-semibold">Total</span>
@@ -302,7 +317,7 @@ export default function CheckoutPage() {
               }}
               disabled={mpLoading || !isFormValid()}
             >
-              {mpLoading ? "Redirigiendo a Mercado Pago..." : "Pagar con Mercado Pago"}
+              {mpLoading ? "Redirigiendo a Mercado Pago..." : "Pagar"}
             </Button>
             {mpError && (
               <p className="text-xs text-red-600">
@@ -324,7 +339,7 @@ export default function CheckoutPage() {
               Vaciar carrito
             </Button>
             <p className="text-xs text-stone-600">
-              El envío se coordina luego de la compra.
+              El envío se coordina luego de la compra. Envío gratis a Mar del Plata.
             </p>
           </div>
         </aside>
@@ -339,6 +354,17 @@ function formatCurrency(value: number): string {
     currency: "ARS",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function isMarDelPlata(address: string): boolean {
+  if (!address) return false;
+  const normalized = address
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  return normalized.includes("mar del plata");
 }
 
 

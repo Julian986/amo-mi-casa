@@ -55,8 +55,8 @@ export default function AdminPage() {
         localStorage.setItem("admin_api_key", apiKey.trim());
         await loadData(apiKey.trim());
       } else {
-        const data = await res.json().catch(() => ({}));
-        setError(data.error || "API key inválida");
+        // Mensaje de error fijo a pedido del cliente
+        setError("Credenciales incorrectas");
       }
     } catch (e) {
       setError("Error de conexión");

@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
 import { User } from "lucide-react";
-import TopBar from "./TopBar";
 import MainNav from "./MainNav";
 import CartIconButton from "./CartIconButton";
 import MobileMenu from "./MobileMenu";
@@ -10,9 +9,16 @@ import SearchBar from "./SearchBar";
 export default function Header() {
   return (
     <header className="w-full bg-white">
-      {/* Bloque superior fijo (promos + logo/buscador/iconos) */}
+      {/* Bloque superior fijo (logo/buscador/iconos) */}
       <div className="fixed inset-x-0 top-0 z-40 bg-white">
-        <TopBar />
+        {/*
+          Banner de promociones (TopBar) - desactivado a pedido del cliente.
+          Si en el futuro lo quieren volver a habilitar:
+          - descomentá el import de TopBar
+          - descomentá el render acá
+          - ajustá el alto del espaciador de abajo (sumar +36px aprox.)
+        */}
+        {/* <TopBar /> */}
         <div className="mx-auto max-w-7xl px-4 py-3">
           <div className="relative grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_auto] items-center gap-2">
             <div className="justify-self-start md:hidden">
@@ -45,7 +51,7 @@ export default function Header() {
       </div>
 
       {/* Espaciador para que el contenido no quede tapado por el header fijo */}
-      <div className="h-[92px] md:h-[110px]" />
+      <div className="h-[56px] md:h-[74px]" />
 
       <MainNav />
     </header>

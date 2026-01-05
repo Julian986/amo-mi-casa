@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/providers/CartProvider";
+import { WHATSAPP_PHONE } from "@/lib/constants";
 
 type ProductCardProps = {
   id: string;
@@ -28,13 +29,17 @@ export default function ProductCard({
   href = `/p/${id}`,
 }: ProductCardProps) {
   const { addItem } = useCart();
+  const isPriced = typeof price === "number";
   const hasDiscount =
-    typeof price === "number" &&
+    isPriced &&
     typeof compareAtPrice === "number" &&
     compareAtPrice > price;
   const discountPct = hasDiscount
     ? Math.round(((compareAtPrice! - price!) / compareAtPrice!) * 100)
     : 0;
+
+  const msg = encodeURIComponent(`Hola! Quisiera consultar por ${name}`);
+  const waHref = `https://wa.me/${WHATSAPP_PHONE}?text=${msg}`;
 
   return (
     <Card className="overflow-hidden">
@@ -66,7 +71,7 @@ export default function ProductCard({
         </Link>
         <div className="flex items-center gap-2">
           <span className="text-base font-semibold text-stone-900">
-            {typeof price === "number" ? formatCurrency(price) : "$"}
+            {isPriced ? formatCurrency(price) : "Consultar"}
           </span>
           {hasDiscount && (
             <span className="text-sm text-stone-500 line-through">
@@ -74,14 +79,22 @@ export default function ProductCard({
             </span>
           )}
         </div>
-        <Button
-          className="w-full"
-          variant="default"
-          style={{ backgroundColor: "#fde9e9", color: "#7f6938" }}
-          onClick={() => addItem({ id, name, price, image })}
-        >
-          Agregar al carrito
-        </Button>
+        {isPriced ? (
+          <Button
+            className="w-full"
+            variant="default"
+            style={{ backgroundColor: "#fde9e9", color: "#7f6938" }}
+            onClick={() => addItem({ id, name, price, image })}
+          >
+            Agregar al carrito
+          </Button>
+        ) : (
+          <a href={waHref} target="_blank" rel="noopener noreferrer">
+            <Button className="w-full" variant="secondary">
+              Consultar
+            </Button>
+          </a>
+        )}
       </div>
     </Card>
   );
