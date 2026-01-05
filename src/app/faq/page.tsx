@@ -16,7 +16,7 @@ export default function FAQPage() {
     },
     {
       q: "¿Puedo cambiar o devolver un producto?",
-      a: "Tenés 10 días corridos para hacer cambios presentando ticket/factura. El producto debe estar en perfectas condiciones.",
+      a: "Los cambios se realizan solo en Mar del Plata. Tenés 10 días corridos para hacer cambios presentando ticket/factura. El producto debe estar en perfectas condiciones.",
     },
     {
       q: "¿Cómo calculo el costo de envío?",

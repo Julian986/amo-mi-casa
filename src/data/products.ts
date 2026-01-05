@@ -147,6 +147,7 @@ export const products: Product[] = [
   {
     id: "auriculares-xaea",
     name: "Auriculares Xaea",
+    price: 30000,
     image:
       "https://res.cloudinary.com/dzoupwn0e/image/upload/v1767614185/Auriculares_Xaea_1_hoamdu.webp",
     description: "Auriculares. Precio a consultar.",

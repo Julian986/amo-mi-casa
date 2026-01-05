@@ -32,7 +32,10 @@ export default function EnviosCambiosPage() {
           <h2 className="text-base font-semibold text-stone-900">Cambios</h2>
           <ul className="mt-3 space-y-2 text-sm text-stone-700">
             <li>
-              Cambios dentro de 10 días corridos con ticket o factura.
+              <span className="font-medium text-stone-900">
+                Cambios solo en Mar del Plata
+              </span>
+              : dentro de 10 días corridos con ticket o factura.
             </li>
             <li>El producto debe estar en perfectas condiciones.</li>
           </ul>

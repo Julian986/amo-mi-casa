@@ -108,7 +108,7 @@ export default async function ProductDetail({ params }: PageProps) {
               <ul className="mt-3 space-y-2 text-sm text-stone-700">
                 <li>Envíos a todo el país. Se coordina luego de la compra.</li>
                 <li>Envío gratis a Mar del Plata.</li>
-                <li>Cambios dentro de 10 días con ticket o factura.</li>
+                <li>Cambios solo en Mar del Plata (10 días con ticket o factura).</li>
                 <li>Retiro sin cargo por el local.</li>
               </ul>
             </div>
