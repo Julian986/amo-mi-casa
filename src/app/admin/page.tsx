@@ -238,7 +238,7 @@ export default function AdminPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-auto">
               <thead className="bg-gray-50 dark:bg-gray-900">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
@@ -246,6 +246,9 @@ export default function AdminPage() {
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Cliente
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                    Envío
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Productos
@@ -264,7 +267,7 @@ export default function AdminPage() {
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {orders.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                    <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                       No hay órdenes
                     </td>
                   </tr>
@@ -273,17 +276,36 @@ export default function AdminPage() {
                     <tr key={order._id || order.orderId} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-4 py-3 text-sm font-mono">{order.orderId}</td>
                       <td className="px-4 py-3 text-sm">
-                        <div>
+                        <div className="space-y-1 min-w-[220px]">
                           <p className="font-medium">{order.customer.fullName || "Sin nombre"}</p>
-                          <p className="text-gray-500 text-xs">{order.customer.email}</p>
+                          {order.customer.email && (
+                            <p className="text-gray-500 text-xs">{order.customer.email}</p>
+                          )}
                           {order.customer.phone && (
                             <p className="text-gray-500 text-xs">{order.customer.phone}</p>
                           )}
-                          {order.customer.address && (
-                            <p className="text-gray-500 text-xs">{order.customer.address}</p>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <div className="space-y-1 min-w-[260px]">
+                          {(order.customer.street || order.customer.addressNumber) && (
+                            <p className="text-gray-700 dark:text-gray-300 text-xs">
+                              {[order.customer.street, order.customer.addressNumber]
+                                .filter(Boolean)
+                                .join(" ")}
+                              {order.customer.apartment ? `, ${order.customer.apartment}` : ""}
+                            </p>
+                          )}
+                          {(order.customer.city || order.customer.province) && (
+                            <p className="text-gray-700 dark:text-gray-300 text-xs">
+                              {[order.customer.city, order.customer.province].filter(Boolean).join(", ")}
+                            </p>
+                          )}
+                          {!order.customer.street && !order.customer.addressNumber && order.customer.address && (
+                            <p className="text-gray-700 dark:text-gray-300 text-xs">{order.customer.address}</p>
                           )}
                           {order.customer.postalCode && (
-                            <p className="text-gray-500 text-xs">CP: {order.customer.postalCode}</p>
+                            <p className="text-gray-700 dark:text-gray-300 text-xs">CP: {order.customer.postalCode}</p>
                           )}
                         </div>
                       </td>

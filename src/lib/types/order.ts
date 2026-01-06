@@ -13,6 +13,11 @@ export type OrderCustomer = {
   email?: string;
   phone?: string;
   address?: string;
+  street?: string;
+  addressNumber?: string;
+  apartment?: string;
+  city?: string;
+  province?: string;
   postalCode?: string;
 };
 

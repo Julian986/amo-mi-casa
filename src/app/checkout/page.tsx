@@ -14,7 +14,11 @@ export default function CheckoutPage() {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
+  const [street, setStreet] = useState("");
+  const [addressNumber, setAddressNumber] = useState("");
+  const [apartment, setApartment] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [notes, setNotes] = useState("");
   const [draftHydrated, setDraftHydrated] = useState(false);
@@ -22,8 +26,12 @@ export default function CheckoutPage() {
   const [mpError, setMpError] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
-  const [addressError, setAddressError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [streetError, setStreetError] = useState<string | null>(null);
+  const [addressNumberError, setAddressNumberError] = useState<string | null>(null);
+  const [cityError, setCityError] = useState<string | null>(null);
+  const [provinceError, setProvinceError] = useState<string | null>(null);
+  const [postalCodeError, setPostalCodeError] = useState<string | null>(null);
 
   // Scroll suave hacia arriba al montar la página
   useEffect(() => {
@@ -42,14 +50,22 @@ export default function CheckoutPage() {
         fullName: string;
         phone: string;
         email: string;
-        address: string;
+        street: string;
+        addressNumber: string;
+        apartment: string;
+        city: string;
+        province: string;
         postalCode: string;
         notes: string;
       }>;
       if (typeof draft.fullName === "string") setFullName(draft.fullName);
       if (typeof draft.phone === "string") setPhone(draft.phone);
       if (typeof draft.email === "string") setEmail(draft.email);
-      if (typeof draft.address === "string") setAddress(draft.address);
+      if (typeof draft.street === "string") setStreet(draft.street);
+      if (typeof draft.addressNumber === "string") setAddressNumber(draft.addressNumber);
+      if (typeof draft.apartment === "string") setApartment(draft.apartment);
+      if (typeof draft.city === "string") setCity(draft.city);
+      if (typeof draft.province === "string") setProvince(draft.province);
       if (typeof draft.postalCode === "string") setPostalCode(draft.postalCode);
       if (typeof draft.notes === "string") setNotes(draft.notes);
     } catch {
@@ -70,7 +86,11 @@ export default function CheckoutPage() {
           fullName,
           phone,
           email,
-          address,
+          street,
+          addressNumber,
+          apartment,
+          city,
+          province,
           postalCode,
           notes,
         })
@@ -78,7 +98,7 @@ export default function CheckoutPage() {
     } catch {
       // ignore
     }
-  }, [draftHydrated, fullName, phone, email, address, postalCode, notes]);
+  }, [draftHydrated, fullName, phone, email, street, addressNumber, apartment, city, province, postalCode, notes]);
 
   // Validar teléfono (formato argentino: acepta números con o sin espacios, guiones, paréntesis)
   const isValidPhone = (phoneValue: string): boolean => {
@@ -92,12 +112,33 @@ export default function CheckoutPage() {
   const isFormValid = (): boolean => {
     const nameValid = fullName.trim().length > 0;
     const phoneValid = isValidPhone(phone);
-    const addressValid = address.trim().length > 0;
     const emailValid = isValidEmail(email);
-    return nameValid && phoneValid && addressValid && emailValid;
+    const streetValid = street.trim().length > 0;
+    const numberValid = addressNumber.trim().length > 0;
+    const cityValid = city.trim().length > 0;
+    const provinceValid = province.trim().length > 0;
+    const postalCodeValid = postalCode.trim().length > 0;
+    return (
+      nameValid &&
+      phoneValid &&
+      emailValid &&
+      streetValid &&
+      numberValid &&
+      cityValid &&
+      provinceValid &&
+      postalCodeValid
+    );
   };
 
-  const isMarDelPlataAddress = isMarDelPlata(address);
+  const isMarDelPlataCity = isMarDelPlata(city);
+  const composedAddress = buildAddress({
+    street,
+    addressNumber,
+    apartment,
+    city,
+    province,
+    postalCode,
+  });
 
   // Validar nombre
   const handleNameChange = (value: string) => {
@@ -121,15 +162,6 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleAddressChange = (value: string) => {
-    setAddress(value);
-    if (value.trim().length === 0) {
-      setAddressError("La dirección es obligatoria");
-    } else {
-      setAddressError(null);
-    }
-  };
-
   const handleEmailChange = (value: string) => {
     setEmail(value);
     if (!isValidEmail(value)) {
@@ -137,6 +169,36 @@ export default function CheckoutPage() {
     } else {
       setEmailError(null);
     }
+  };
+
+  const handleStreetChange = (value: string) => {
+    setStreet(value);
+    if (!value.trim()) setStreetError("La calle es obligatoria");
+    else setStreetError(null);
+  };
+
+  const handleAddressNumberChange = (value: string) => {
+    setAddressNumber(value);
+    if (!value.trim()) setAddressNumberError("El número es obligatorio");
+    else setAddressNumberError(null);
+  };
+
+  const handleCityChange = (value: string) => {
+    setCity(value);
+    if (!value.trim()) setCityError("La localidad es obligatoria");
+    else setCityError(null);
+  };
+
+  const handleProvinceChange = (value: string) => {
+    setProvince(value);
+    if (!value.trim()) setProvinceError("La provincia es obligatoria");
+    else setProvinceError(null);
+  };
+
+  const handlePostalCodeChange = (value: string) => {
+    setPostalCode(value);
+    if (!value.trim()) setPostalCodeError("El código postal es obligatorio");
+    else setPostalCodeError(null);
   };
 
   if (items.length === 0) {
@@ -209,27 +271,78 @@ export default function CheckoutPage() {
                 )}
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="address">
-                  Dirección <span className="text-red-600">*</span>
+                <Label htmlFor="street">
+                  Calle <span className="text-red-600">*</span>
                 </Label>
                 <Input
-                  id="address"
-                  value={address}
-                  onChange={(e) => handleAddressChange(e.target.value)}
-                  placeholder="Calle, número, piso/depto, localidad"
-                  className={addressError ? "border-red-500" : ""}
+                  id="street"
+                  value={street}
+                  onChange={(e) => handleStreetChange(e.target.value)}
+                  placeholder="Ej: San Martín"
+                  className={streetError ? "border-red-500" : ""}
                   required
                 />
-                {addressError && (
-                  <p className="text-xs text-red-600">{addressError}</p>
+                {streetError && <p className="text-xs text-red-600">{streetError}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="addressNumber">
+                  Número <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="addressNumber"
+                  value={addressNumber}
+                  onChange={(e) => handleAddressNumberChange(e.target.value)}
+                  placeholder="Ej: 1234"
+                  className={addressNumberError ? "border-red-500" : ""}
+                  required
+                />
+                {addressNumberError && (
+                  <p className="text-xs text-red-600">{addressNumberError}</p>
                 )}
-                {address.trim().length > 0 && (
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="apartment">Piso/Depto (opcional)</Label>
+                <Input
+                  id="apartment"
+                  value={apartment}
+                  onChange={(e) => setApartment(e.target.value)}
+                  placeholder="Ej: 5B"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="city">
+                  Localidad <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="city"
+                  value={city}
+                  onChange={(e) => handleCityChange(e.target.value)}
+                  placeholder="Ej: Mar del Plata"
+                  className={cityError ? "border-red-500" : ""}
+                  required
+                />
+                {cityError && <p className="text-xs text-red-600">{cityError}</p>}
+                {city.trim().length > 0 && (
                   <p className="text-xs text-stone-600">
-                    {isMarDelPlataAddress
+                    {isMarDelPlataCity
                       ? "Envío gratis a Mar del Plata."
                       : "Tip: si tu dirección es en Mar del Plata, el envío es gratis."}
                   </p>
                 )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="province">
+                  Provincia <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="province"
+                  value={province}
+                  onChange={(e) => handleProvinceChange(e.target.value)}
+                  placeholder="Ej: Buenos Aires"
+                  className={provinceError ? "border-red-500" : ""}
+                  required
+                />
+                {provinceError && <p className="text-xs text-red-600">{provinceError}</p>}
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="email">
@@ -249,13 +362,20 @@ export default function CheckoutPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="postalCode">Código postal (opcional)</Label>
+                <Label htmlFor="postalCode">
+                  Código postal <span className="text-red-600">*</span>
+                </Label>
                 <Input
                   id="postalCode"
                   value={postalCode}
-                  onChange={(e) => setPostalCode(e.target.value)}
-                  placeholder="Ej: 1414"
+                  onChange={(e) => handlePostalCodeChange(e.target.value)}
+                  placeholder="Ej: 7600"
+                  className={postalCodeError ? "border-red-500" : ""}
+                  required
                 />
+                {postalCodeError && (
+                  <p className="text-xs text-red-600">{postalCodeError}</p>
+                )}
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="notes">Notas (opcional)</Label>
@@ -280,7 +400,7 @@ export default function CheckoutPage() {
             <div className="flex items-center justify-between">
               <span>Envío</span>
               <span className="font-medium">
-                {isMarDelPlataAddress ? "Gratis" : "A coordinar"}
+                {isMarDelPlataCity ? "Gratis" : "A coordinar"}
               </span>
             </div>
             <div className="flex items-center justify-between border-t border-stone-200 pt-2">
@@ -306,8 +426,24 @@ export default function CheckoutPage() {
                   setPhoneError("Ingresá un número de teléfono válido");
                   return;
                 }
-                if (!address.trim()) {
-                  setAddressError("La dirección es obligatoria");
+                if (!street.trim()) {
+                  setStreetError("La calle es obligatoria");
+                  return;
+                }
+                if (!addressNumber.trim()) {
+                  setAddressNumberError("El número es obligatorio");
+                  return;
+                }
+                if (!city.trim()) {
+                  setCityError("La localidad es obligatoria");
+                  return;
+                }
+                if (!province.trim()) {
+                  setProvinceError("La provincia es obligatoria");
+                  return;
+                }
+                if (!postalCode.trim()) {
+                  setPostalCodeError("El código postal es obligatorio");
                   return;
                 }
                 if (!isValidEmail(email)) {
@@ -329,7 +465,12 @@ export default function CheckoutPage() {
                       fullName: fullName || undefined,
                       email: email || undefined,
                       phone: phone || undefined,
-                      address: address || undefined,
+                      address: composedAddress || undefined,
+                      street: street || undefined,
+                      addressNumber: addressNumber || undefined,
+                      apartment: apartment || undefined,
+                      city: city || undefined,
+                      province: province || undefined,
                       postalCode: postalCode || undefined,
                       notes: notes || undefined,
                     },
@@ -417,6 +558,28 @@ function isValidEmail(value: string): boolean {
   if (!trimmed) return false;
   // Validación simple (suficiente para UI) evitando falsos positivos comunes.
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+}
+
+function buildAddress(input: {
+  street: string;
+  addressNumber: string;
+  apartment: string;
+  city: string;
+  province: string;
+  postalCode: string;
+}): string {
+  const parts: string[] = [];
+  const streetLine = [input.street?.trim(), input.addressNumber?.trim()]
+    .filter(Boolean)
+    .join(" ");
+  if (streetLine) parts.push(streetLine);
+  const apt = input.apartment?.trim();
+  if (apt) parts.push(apt);
+  const cityProv = [input.city?.trim(), input.province?.trim()].filter(Boolean).join(", ");
+  if (cityProv) parts.push(cityProv);
+  const cp = input.postalCode?.trim();
+  if (cp) parts.push(`CP ${cp}`);
+  return parts.join(" - ");
 }
 
 

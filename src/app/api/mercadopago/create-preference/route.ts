@@ -15,6 +15,11 @@ type Body = {
     email?: string;
     phone?: string;
     address?: string;
+    street?: string;
+    addressNumber?: string;
+    apartment?: string;
+    city?: string;
+    province?: string;
     postalCode?: string;
     notes?: string;
   };
@@ -244,6 +249,11 @@ export async function POST(request: Request) {
         email: body.customer?.email || body.payer?.email,
         phone: body.customer?.phone || body.payer?.phone,
         address: body.customer?.address,
+        street: body.customer?.street,
+        addressNumber: body.customer?.addressNumber,
+        apartment: body.customer?.apartment,
+        city: body.customer?.city,
+        province: body.customer?.province,
         postalCode: body.customer?.postalCode,
       };
 
