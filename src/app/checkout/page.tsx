@@ -23,6 +23,7 @@ export default function CheckoutPage() {
   const [nameError, setNameError] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [addressError, setAddressError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   // Scroll suave hacia arriba al montar la página
   useEffect(() => {
@@ -92,7 +93,8 @@ export default function CheckoutPage() {
     const nameValid = fullName.trim().length > 0;
     const phoneValid = isValidPhone(phone);
     const addressValid = address.trim().length > 0;
-    return nameValid && phoneValid && addressValid;
+    const emailValid = isValidEmail(email);
+    return nameValid && phoneValid && addressValid && emailValid;
   };
 
   const isMarDelPlataAddress = isMarDelPlata(address);
@@ -125,6 +127,15 @@ export default function CheckoutPage() {
       setAddressError("La dirección es obligatoria");
     } else {
       setAddressError(null);
+    }
+  };
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    if (!isValidEmail(value)) {
+      setEmailError("Ingresá un email válido");
+    } else {
+      setEmailError(null);
     }
   };
 
@@ -221,13 +232,21 @@ export default function CheckoutPage() {
                 )}
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="email">Email (opcional)</Label>
+                <Label htmlFor="email">
+                  Email <span className="text-red-600">*</span>
+                </Label>
                 <Input
                   id="email"
+                  type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => handleEmailChange(e.target.value)}
                   placeholder="tu@email.com"
+                  className={emailError ? "border-red-500" : ""}
+                  required
                 />
+                {emailError && (
+                  <p className="text-xs text-red-600">{emailError}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="postalCode">Código postal (opcional)</Label>
@@ -289,6 +308,10 @@ export default function CheckoutPage() {
                 }
                 if (!address.trim()) {
                   setAddressError("La dirección es obligatoria");
+                  return;
+                }
+                if (!isValidEmail(email)) {
+                  setEmailError("Ingresá un email válido");
                   return;
                 }
 
@@ -387,6 +410,13 @@ function isMarDelPlata(address: string): boolean {
     .replace(/[\u0300-\u036f]/g, "");
 
   return normalized.includes("mar del plata");
+}
+
+function isValidEmail(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  // Validación simple (suficiente para UI) evitando falsos positivos comunes.
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
 }
 
 
