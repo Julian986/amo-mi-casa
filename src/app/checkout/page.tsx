@@ -22,6 +22,7 @@ export default function CheckoutPage() {
   const [mpError, setMpError] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [addressError, setAddressError] = useState<string | null>(null);
 
   // Scroll suave hacia arriba al montar la página
   useEffect(() => {
@@ -90,7 +91,8 @@ export default function CheckoutPage() {
   const isFormValid = (): boolean => {
     const nameValid = fullName.trim().length > 0;
     const phoneValid = isValidPhone(phone);
-    return nameValid && phoneValid;
+    const addressValid = address.trim().length > 0;
+    return nameValid && phoneValid && addressValid;
   };
 
   const isMarDelPlataAddress = isMarDelPlata(address);
@@ -114,6 +116,15 @@ export default function CheckoutPage() {
       setPhoneError("Ingresá un número de teléfono válido");
     } else {
       setPhoneError(null);
+    }
+  };
+
+  const handleAddressChange = (value: string) => {
+    setAddress(value);
+    if (value.trim().length === 0) {
+      setAddressError("La dirección es obligatoria");
+    } else {
+      setAddressError(null);
     }
   };
 
@@ -187,22 +198,20 @@ export default function CheckoutPage() {
                 )}
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="email">Email (opcional)</Label>
-                <Input
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@email.com"
-                />
-              </div>
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="address">Dirección (opcional)</Label>
+                <Label htmlFor="address">
+                  Dirección <span className="text-red-600">*</span>
+                </Label>
                 <Input
                   id="address"
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={(e) => handleAddressChange(e.target.value)}
                   placeholder="Calle, número, piso/depto, localidad"
+                  className={addressError ? "border-red-500" : ""}
+                  required
                 />
+                {addressError && (
+                  <p className="text-xs text-red-600">{addressError}</p>
+                )}
                 {address.trim().length > 0 && (
                   <p className="text-xs text-stone-600">
                     {isMarDelPlataAddress
@@ -210,6 +219,15 @@ export default function CheckoutPage() {
                       : "Tip: si tu dirección es en Mar del Plata, el envío es gratis."}
                   </p>
                 )}
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="email">Email (opcional)</Label>
+                <Input
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="tu@email.com"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="postalCode">Código postal (opcional)</Label>
@@ -267,6 +285,10 @@ export default function CheckoutPage() {
                 }
                 if (!isValidPhone(phone)) {
                   setPhoneError("Ingresá un número de teléfono válido");
+                  return;
+                }
+                if (!address.trim()) {
+                  setAddressError("La dirección es obligatoria");
                   return;
                 }
 

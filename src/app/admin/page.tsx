@@ -279,6 +279,12 @@ export default function AdminPage() {
                           {order.customer.phone && (
                             <p className="text-gray-500 text-xs">{order.customer.phone}</p>
                           )}
+                          {order.customer.address && (
+                            <p className="text-gray-500 text-xs">{order.customer.address}</p>
+                          )}
+                          {order.customer.postalCode && (
+                            <p className="text-gray-500 text-xs">CP: {order.customer.postalCode}</p>
+                          )}
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm">
