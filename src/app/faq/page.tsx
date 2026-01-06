@@ -4,7 +4,7 @@ export default function FAQPage() {
   const faqs = [
     {
       q: "¿Cuáles son los medios de pago?",
-      a: "Aceptamos Mercado Pago (cuotas y billetera), tarjetas de crédito/débito y efectivo/transferencia.",
+      a: "Aceptamos Mercado Pago (tarjeta o billetera, 1 pago).",
     },
     {
       q: "¿Hacen envíos? ¿Cuánto tardan?",

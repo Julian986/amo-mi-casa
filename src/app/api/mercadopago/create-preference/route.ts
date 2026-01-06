@@ -97,6 +97,11 @@ export async function POST(request: Request) {
       failure: `${baseUrl}/checkout/failure`,
     },
     notification_url: `${baseUrl}/api/mercadopago/webhook`, // Webhook para recibir notificaciones
+    // Evitar que Mercado Pago ofrezca cuotas (pueden incrementar el total para el comprador).
+    // El comercio igualmente paga su comisión (se descuenta del neto), pero el comprador no ve recargos por financiación.
+    payment_methods: {
+      installments: 1,
+    },
   };
 
   // Datos del comprador (opcionales)
