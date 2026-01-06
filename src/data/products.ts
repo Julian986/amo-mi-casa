@@ -86,8 +86,8 @@ export const products: Product[] = [
   {
     id: "repasador",
     name: "Repasador Panal",
-    //price: 24000,
-    price: 5,
+    price: 24000,
+    //price: 5,
     image: "https://res.cloudinary.com/dzoupwn0e/image/upload/v1765382612/repasador_jhdcvg.webp",
     description: "Repasador de algodón de gran absorción. Por 1 unidad.",
     colors: ["Crudo", "Gris", "Visón"],
