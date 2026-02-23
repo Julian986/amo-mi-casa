@@ -5,11 +5,12 @@ Cosas a revisar
 - Nombre de la cafetera
 
 Tasks
-- Ajustar los precios
-- Envíos y cambios: Cambios? lo quitamos?
+- Comprobar la calidad de integracion en mercado pago
 - Poner codigo de promocion - pedido por cliente
+- Ajustar los precios✅
+- Envíos y cambios: Cambios? lo quitamos?✅
 - Guardar el nombre y el telefono del usuario cuando pone pagar✅
-- Mensaje de error del formulario de admin
+- Mensaje de error del formulario de admin✅
 - Pagar con mercado pago, pagar✅
 - 
 

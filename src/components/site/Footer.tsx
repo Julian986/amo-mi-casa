@@ -29,8 +29,8 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-stone-900">Contacto</h3>
             <ul className="mt-3 space-y-2 text-sm text-stone-700">
               <li>WhatsApp: +54 11 5056-2136</li>
-              <li>Email: hola@amomicasa.com</li>
-              <li>Dirección: a definir</li>
+              <li>Email: natalia@amomicasa.com</li>
+              {/* <li>Dirección: a definir</li> */}
             </ul>
           </div>
         </div>
