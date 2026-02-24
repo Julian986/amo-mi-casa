@@ -35,7 +35,18 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-10 border-t border-stone-200 pt-6 text-xs text-stone-600">
-          © {new Date().getFullYear()} Amo mi casa. Todos los derechos reservados.
+          <div>© {new Date().getFullYear()} Amo mi casa. Todos los derechos reservados.</div>
+          <div className="mt-1">
+            Creado por{" "}
+            <a
+              href="https://glomun.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-stone-900"
+            >
+              glomun.com
+            </a>
+          </div>
         </div>
       </div>
     </footer>
